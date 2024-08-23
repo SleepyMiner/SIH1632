@@ -24,6 +24,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
     @RestResource(exported = false)
     List<User> findAllByEmailAndPassword(String email, String password);
 
+
     @Override
     @RestResource(exported = false)
     void deleteById(String id);

@@ -1,9 +1,9 @@
 package org.au.careercove.api.data.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
@@ -25,32 +25,16 @@ public class Workshop implements Serializable, Comparable<Workshop> {
     @Id
 	private String id;
 
-    @Column(name = "OrganizationID")
     private String organizationID;
-	
-    @Column(name = "Title")
 	private String title;
-
-    @Column(name = "Description")
 	private String description;
-
-    @Column(name = "InstructorName")
     private String instructorName;
-
-    @Column(name = "NumberOfPosting")
     private Number numberOfPosting;
-
-    @Column(name = "Certificate")
     private Boolean certificate;
-
-    @Column(name = "Duration")
     private Number duration;
-
-    @Column(name = "Mode")
     private String mode;
-
-    @Column(name = "Sector")
     private String sector;
+	private LocalDateTime postedOn = LocalDateTime.now();
 
 
 

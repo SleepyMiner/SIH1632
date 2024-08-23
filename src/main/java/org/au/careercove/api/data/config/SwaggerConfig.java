@@ -40,7 +40,7 @@ public class SwaggerConfig {
                  "CareerCove data APIs",
                  "1.0",
                  "Terms of service",
-                 new Contact("Amity Universtiry - CareerCove", "https://careercove.com", "support@careercove.com"),
+                 new Contact("Amity University - CareerCove", "https://careercove.com", "support@careercove.com"),
                 "Apache License Version 2.0",
                  "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
     }

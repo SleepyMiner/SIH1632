@@ -28,7 +28,7 @@ public class ValueHelpController {
 		valueHelps.put(ALLOWED_TYPES.GENDER, ValueHelp.getValueHelps(ALLOWED_TYPES.GENDER));
 		valueHelps.put(ALLOWED_TYPES.USER, ValueHelp.getValueHelps(ALLOWED_TYPES.USER));
 		valueHelps.put(ALLOWED_TYPES.ORGANIZATION, ValueHelp.getValueHelps(ALLOWED_TYPES.ORGANIZATION));
-		valueHelps.put(ALLOWED_TYPES.MODE, ValueHelp.getValueHelps(ALLOWED_TYPES.MODE));
+		valueHelps.put(ALLOWED_TYPES.PAY, ValueHelp.getValueHelps(ALLOWED_TYPES.PAY));
 
 		return ResponseEntity.ok(valueHelps);
 	}

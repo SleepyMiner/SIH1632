@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 
 import lombok.Data;
@@ -26,9 +27,14 @@ public class Job implements Serializable, Comparable<Job> {
 
 	@Column(name = "OrgID")
 	private String organizationID;
+
+	@Column(name = "OrgName")
+	private String organizationName;
 	
 	@Column(name = "Title")
 	private String title;
+
+	@Lob
 	@Column(name = "Description")
 	private String description;
 
@@ -42,7 +48,7 @@ public class Job implements Serializable, Comparable<Job> {
 	private String workHours;
 
 	@Column(name = "postedOn")
-	private LocalDateTime postedOn = LocalDateTime.now();
+	private LocalDateTime postedOn;
 
 	@Column(name = "isActive")
 	private boolean isActive = true;

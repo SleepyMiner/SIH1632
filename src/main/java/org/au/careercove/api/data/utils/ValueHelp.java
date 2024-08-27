@@ -12,13 +12,13 @@ public class ValueHelp {
 		USER,
 		GENDER,
 		ORGANIZATION, 
-		MODE
+		PAY
 	}
 
 	private static List<ValueType> userType = new ArrayList<>();
 	private static List<ValueType> genderType = new ArrayList<>();
 	private static List<ValueType> organizationType = new ArrayList<>();
-	private static List<ValueType> modeType = new ArrayList<>();
+	private static List<ValueType> payType = new ArrayList<>();
 
 	static {
 		userType.add(new ValueType("10001", "Administrator", "Administrator"));
@@ -31,8 +31,8 @@ public class ValueHelp {
 		organizationType.add(new ValueType("30001", "Education Institute", "Education Institute"));
 		organizationType.add(new ValueType("30002", "Corportate", "Corportate"));
 
-		modeType.add(new ValueType("40001", "Paid", "Paid"));
-		modeType.add(new ValueType("40001", "Not Paid", "Not Paid"));
+		payType.add(new ValueType("40001", "Paid", "Paid"));
+		payType.add(new ValueType("40001", "Not Paid", "Not Paid"));
 	}
 
 	public static boolean isValidType(ALLOWED_TYPES type, String id) {
@@ -49,8 +49,8 @@ public class ValueHelp {
 			case ORGANIZATION:
 				typeToValidate = organizationType;
 				break;
-			case MODE:
-				typeToValidate = modeType;
+			case PAY:
+				typeToValidate = payType;
 				break;
 		}
 
@@ -76,8 +76,8 @@ public class ValueHelp {
 				return userType;
 			case ORGANIZATION:
 				return organizationType;
-			case MODE:
-				return modeType;
+			case PAY:
+				return payType;
 
 		}
 

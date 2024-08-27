@@ -14,6 +14,7 @@
     "@ui5/webcomponents-fiori": "^2.1.2",
     "@ui5/webcomponents-icons": "^2.1.2",
     "@ui5/webcomponents-react": "^2.0.0",
+    "app": "file:",
     "axios": "^1.7.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

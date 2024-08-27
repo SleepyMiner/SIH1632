@@ -3,19 +3,20 @@ import {
   FilterGroupItem,
   Input,
   Select,
-  Title,
   Option,
 } from "@ui5/webcomponents-react";
 import {
   useWorkModeState,
   useJobSearchState,
   useCompanySearchState,
+  useSectorState,
 } from "../store/Store";
 
 export default function Filters() {
   const { setSelectedWorkMode } = useWorkModeState();
   const { setsearchedJob } = useJobSearchState();
   const { setSelectedCompany } = useCompanySearchState();
+  const { setSelectedSector } = useSectorState();
 
   const handleWorkModeChange = (e: { detail: any }) => {
     setSelectedWorkMode(e.detail.selectedOption.innerText);
@@ -30,16 +31,13 @@ export default function Filters() {
     console.log(e.target.typedInValue);
   };
 
+  const handleSectorChange = (e: { detail: any }) => {
+    setSelectedSector(e.detail.selectedOption.innerText);
+  };
+
   return (
     <div>
-      <FilterBar
-        filterContainerWidth="13.125rem"
-        header={
-          <Title level="H5" size="H5">
-            Filters
-          </Title>
-        }
-      >
+      <FilterBar filterContainerWidth="13.125rem">
         <FilterGroupItem
           label="Company Search"
           filterKey="companySearch"
@@ -64,6 +62,14 @@ export default function Filters() {
             <Option>On-Site</Option>
             <Option>Remote</Option>
             <Option>Hybrid</Option>
+          </Select>
+        </FilterGroupItem>
+        <FilterGroupItem label="Sector" filterKey="sector" groupName="Group 4">
+          <Select onChange={handleSectorChange}>
+            <Option selected>All</Option>
+            <Option>Private</Option>
+            <Option>Government</Option>
+            <Option>Foreign</Option>
           </Select>
         </FilterGroupItem>
       </FilterBar>

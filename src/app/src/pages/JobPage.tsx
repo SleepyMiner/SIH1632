@@ -16,6 +16,7 @@ import {
   useWorkModeState,
   useCompanySearchState,
   useJobSearchState,
+  useSectorState,
 } from "../store/Store";
 
 export default function JobPage() {
@@ -26,80 +27,59 @@ export default function JobPage() {
   const { selectedWorkMode } = useWorkModeState();
   const { selectedCompany } = useCompanySearchState();
   const { searchedJob } = useJobSearchState();
+  const { selectedSector } = useSectorState();
 
   const fetchJobs = () => {
-    if (
-      selectedCompany != "" &&
-      searchedJob != "" &&
-      selectedWorkMode != "All"
-    ) {
-    } else {
+    const params: any = {};
+
+    if (selectedWorkMode !== "All") {
+      params.workMode = selectedWorkMode;
+    }
+    if (selectedCompany) {
+      params.organizationName = selectedCompany;
+    }
+    if (searchedJob) {
+      params.title = searchedJob;
+    }
+    if (selectedSector !== "All") {
+      params.sector = selectedSector;
+    }
+
+    if (Object.keys(params).length === 0) {
       axios.get(`${BASE_URL}/jobs`).then((response) => {
         setJobs(response.data._embedded.jobs);
       });
+    } else {
+      axios
+        .get(
+          `${BASE_URL}/jobs/search/findAllByTitleOrOrganizationNameOrWorkModeOrSector`,
+          { params }
+        )
+        .then((response) => {
+          setJobs(response.data._embedded.jobs);
+        });
     }
   };
 
-  const handleJobFetch = () => {
-    axios.get(`${BASE_URL}/jobs/${selectedJob}`).then((response) => {
-      console.log(response.data);
-      setSelectedJobData(response.data);
-    });
-  };
+  // const handleJobFetch = () => {
+
+  // };
 
   const handleJobClick = (e: any) => {
-    setSelectedJob(e.target.attributes["accessible-name"].textContent);
-    setDialogOpen(true);
-    handleJobFetch();
+    axios
+      .get(
+        `${BASE_URL}/jobs/${e.target.attributes["accessible-name"].textContent}`
+      )
+      .then((response) => {
+        setSelectedJobData(response.data);
+        console.log(response.data);
+        setDialogOpen(true);
+      });
   };
 
   const handleJobClose = () => {
     setDialogOpen(false);
     setSelectedJobData([]);
-    handleJobFetch();
-  };
-
-  const fetchJobOnType = () => {
-    if (selectedWorkMode != "All") {
-      axios
-        .get(
-          `${BASE_URL}/jobs/search/findAllByTitleOrOrganizationNameOrWorkModeOrSector?workMode=${selectedWorkMode}`
-        )
-        .then((response) => {
-          setJobs(response.data._embedded.jobs);
-          console.log(response.data);
-        });
-    } else {
-      fetchJobs();
-    }
-  };
-
-  const fetchByCompany = () => {
-    if (selectedCompany != "" && searchedJob != "") {
-      axios
-        .get(
-          `${BASE_URL}/jobs/search/findAllByOrganizationNameContaining?organizationName=${selectedCompany}`
-        )
-        .then((response) => {
-          setJobs(response.data._embedded.jobs);
-        });
-    } else {
-      fetchJobs();
-    }
-  };
-
-  const fetchByJob = () => {
-    if (searchedJob != "") {
-      axios
-        .get(
-          `${BASE_URL}/jobs/search/findAllByTitleContaining?title=${searchedJob}`
-        )
-        .then((response) => {
-          setJobs(response.data._embedded.jobs);
-        });
-    } else {
-      fetchJobs();
-    }
   };
 
   useEffect(() => {
@@ -107,39 +87,28 @@ export default function JobPage() {
   }, []);
 
   useEffect(() => {
-    fetchJobOnType();
-  }, [selectedWorkMode]);
-
-  useEffect(() => {
-    fetchByCompany();
-  }, [selectedCompany]);
-
-  useEffect(() => {
-    fetchByJob();
-  }, [searchedJob]);
+    fetchJobs();
+  }, [selectedWorkMode, selectedCompany, searchedJob, selectedSector]);
 
   return (
     <>
       <div className="p-2">
         <Filters />
       </div>
-      <div className="p-4">
+      <div className="p-1">
         {jobs.map((job) => (
           <Card
             header={
               <CardHeader
-                subtitleText={
-                  !job["organizationName"] ? "ADMIN" : job["organizationName"]
-                }
+                subtitleText={job["organizationName"]}
                 titleText={job["title"]}
-                // additionalText={`Details: ${(<a href="#">Go to Details</a>)}`}
                 onClick={handleJobClick}
               />
             }
             style={{
               width: "300px",
             }}
-            className="p-8"
+            className="p-4"
             key={job["id"]}
           >
             <List>
@@ -177,7 +146,13 @@ export default function JobPage() {
             />
           }
         >
-          <p>{selectedJobData["title"]}</p>
+          <div key={selectedJobData["id"]}>
+            <p>{selectedJobData["title"]}</p>
+            <p>{selectedJobData["description"]}</p>
+            <p>{selectedJobData["organizationName"]}</p>
+            <p>{selectedJobData["sector"]}</p>
+            <p>{selectedJobData["workMode"]}</p>
+          </div>
         </Dialog>
       ) : (
         <></>

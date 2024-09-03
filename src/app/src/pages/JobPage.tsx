@@ -17,17 +17,22 @@ import {
   useCompanySearchState,
   useJobSearchState,
   useSectorState,
+  useAppliedJobState,
 } from "../store/Store";
+import { PiSuitcaseDuotone, PiBuildingOffice } from "react-icons/pi";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [selectedJob, setSelectedJob] = useState<string>("");
   const [selectedJobData, setSelectedJobData] = useState<any>({});
   const { selectedWorkMode } = useWorkModeState();
   const { selectedCompany } = useCompanySearchState();
   const { searchedJob } = useJobSearchState();
   const { selectedSector } = useSectorState();
+  const { setAppliedJob } = useAppliedJobState();
+  const navigate = useNavigate();
 
   const fetchJobs = () => {
     const params: any = {};
@@ -61,9 +66,37 @@ export default function JobPage() {
     }
   };
 
-  // const handleJobFetch = () => {
+  const calculateTime = (t: any) => {
+    const now = new Date();
+    const pastDate = new Date(t);
 
-  // };
+    const diffInMs = now.getTime() - pastDate.getTime();
+
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+      if (diffInDays > 1) {
+        return `${diffInDays} days ago`;
+      } else {
+        return `${diffInDays} day ago`;
+      }
+    } else if (diffInHours > 0) {
+      if (diffInHours > 1) {
+        return `${diffInHours % 24} hours ago`;
+      } else {
+        return `${diffInHours % 24} hour ago`;
+      }
+    } else if (diffInMinutes > 0) {
+      if (diffInMinutes > 1) {
+        return `${diffInMinutes % 60} minutes ago`;
+      } else {
+        return `${diffInMinutes % 60} minute ago`;
+      }
+    }
+  };
 
   const handleJobClick = (e: any) => {
     axios
@@ -72,9 +105,14 @@ export default function JobPage() {
       )
       .then((response) => {
         setSelectedJobData(response.data);
-        console.log(response.data);
         setDialogOpen(true);
       });
+  };
+
+  const handleJobApply = (id: string) => {
+    setAppliedJob(id);
+    console.log(id);
+    navigate("/apply");
   };
 
   const handleJobClose = () => {
@@ -95,7 +133,7 @@ export default function JobPage() {
       <div className="p-2">
         <Filters />
       </div>
-      <div className="p-1">
+      <div>
         {jobs.map((job) => (
           <Card
             header={
@@ -103,10 +141,11 @@ export default function JobPage() {
                 subtitleText={job["organizationName"]}
                 titleText={job["title"]}
                 onClick={handleJobClick}
+                additionalText={`Posted: ${calculateTime(job["postedOn"])}`}
               />
             }
             style={{
-              width: "300px",
+              width: "400px",
             }}
             className="p-4"
             key={job["id"]}
@@ -121,7 +160,10 @@ export default function JobPage() {
               <ListItemStandard description={job["workMode"]}>
                 Work Mode
               </ListItemStandard>
-              <ListItemStandard>
+              <ListItemStandard description={job["workHours"]}>
+                Work Hours
+              </ListItemStandard>
+              <ListItemStandard className="pb-1">
                 <Button
                   onClick={handleJobClick}
                   design="Attention"
@@ -145,13 +187,62 @@ export default function JobPage() {
               endContent={<Button onClick={handleJobClose}>Close</Button>}
             />
           }
+          className="w-96"
         >
-          <div key={selectedJobData["id"]}>
-            <p>{selectedJobData["title"]}</p>
-            <p>{selectedJobData["description"]}</p>
-            <p>{selectedJobData["organizationName"]}</p>
-            <p>{selectedJobData["sector"]}</p>
-            <p>{selectedJobData["workMode"]}</p>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 text-xl">
+              <PiBuildingOffice />
+              <p>{selectedJobData["organizationName"]}</p>
+            </div>
+            <p className="text-2xl font-semibold">{selectedJobData["title"]}</p>
+            <p className="text-sm text-gray-500 mx-0.5 pt-0.5">
+              Posted: {calculateTime(selectedJobData["postedOn"])}
+            </p>
+            <div className="flex gap-2 items-center">
+              <PiSuitcaseDuotone size={20} />
+              <p>
+                {" - "}
+                {selectedJobData["type"][0].toUpperCase() +
+                  selectedJobData["type"].slice(1)}
+              </p>
+              <p>
+                {" - "}
+                {selectedJobData["workMode"]} - {selectedJobData["sector"]}
+              </p>
+            </div>
+            <Button
+              className="flex w-32 mt-4 rounded-xl"
+              design="Emphasized"
+              onClick={() => handleJobApply(selectedJobData["id"])}
+            >
+              <div className="flex gap-4">
+                <p>Apply</p> <FaExternalLinkAlt size={15} />
+              </div>
+            </Button>
+
+            <div className="mt-6">
+              <p className="font-semibold text-xl">About the Job:</p>
+              <div className="flex gap-1">
+                <p className="font-semibold">Job Title: </p>
+                <p>{selectedJobData["title"]}</p>
+              </div>
+              <div className="flex gap-1">
+                <p className="font-semibold">Company: </p>
+                <p>{selectedJobData["organizationName"]}</p>
+              </div>
+              <div className="flex gap-1">
+                <p className="font-semibold">Work Hours: </p>
+                <p>{selectedJobData["workHours"]}</p>
+              </div>
+              <div className="flex gap-1">
+                <p className="font-semibold">Sector: </p>
+                <p>{selectedJobData["sector"]}</p>
+              </div>
+              <div className="flex gap-1">
+                <p className="font-semibold">Description: </p>
+                <p>{selectedJobData["description"]}</p>
+              </div>
+            </div>
           </div>
         </Dialog>
       ) : (

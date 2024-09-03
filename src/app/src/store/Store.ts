@@ -20,6 +20,11 @@ interface SectorState {
   setSelectedSector: (input: string) => void;
 }
 
+interface AppliedJobState {
+  appliedJob: string;
+  setAppliedJob: (input: string) => void;
+}
+
 export const useWorkModeState = create<WorkModeState>((set) => ({
   selectedWorkMode: "All",
   setSelectedWorkMode: (input) => set({ selectedWorkMode: input }),
@@ -38,4 +43,9 @@ export const useCompanySearchState = create<CompanySearchState>((set) => ({
 export const useSectorState = create<SectorState>((set) => ({
   selectedSector: "All",
   setSelectedSector: (input) => set({ selectedSector: input }),
+}));
+
+export const useAppliedJobState = create<AppliedJobState>((set) => ({
+  appliedJob: "",
+  setAppliedJob: (input) => set({ appliedJob: input }),
 }));

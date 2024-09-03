@@ -20,17 +20,22 @@ public interface JobRepository extends PagingAndSortingRepository<Job, String> {
     List<Job> findAllByOrganizationNameContaining(@Param("organizationName") String organizationName);
 
     @Transactional
-@Query("SELECT j FROM Job j " +
-       "WHERE (:title IS NULL OR j.title LIKE %:title%) " +
-       "AND (:organizationName IS NULL OR j.organizationName LIKE %:organizationName%) " +
-       "AND (:workMode IS NULL OR j.workMode = :workMode) " +
-       "AND (:sector IS NULL OR j.sector = :sector)")
-List<Job> findAllByTitleOrOrganizationNameOrWorkModeOrSector(
-    @Param("title") String title,
-    @Param("organizationName") String organizationName,
-    @Param("workMode") String workMode,
-    @Param("sector") String sector
-);
+    @Query(value = "SELECT * FROM job j " +
+                   "WHERE (:title IS NULL OR j.title LIKE %:title%) " +
+                   "AND (:organizationName IS NULL OR j.org_name LIKE %:organizationName%) " +
+                   "AND (:workMode IS NULL OR j.work_mode = :workMode) " +
+                   "AND (:sector IS NULL OR j.sector = :sector) " +
+                   "AND (:workHours IS NULL OR j.worhours = :workHours)",
+           nativeQuery = true)
+    List<Job> findAllByTitleOrOrganizationNameOrWorkModeOrSectorOrSkillsOrWorkHours(
+        @Param("title") String title,
+        @Param("organizationName") String organizationName,
+        @Param("workMode") String workMode,
+        @Param("sector") String sector,
+        @Param("workHours") String workHours
+    );
+
+    
 
     @Override
     @RestResource(exported = false)

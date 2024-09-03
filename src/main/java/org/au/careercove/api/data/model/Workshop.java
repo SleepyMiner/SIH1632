@@ -2,12 +2,17 @@ package org.au.careercove.api.data.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Data
 @EqualsAndHashCode()
 @ApiIgnore
-@Table(name = "Workshop")
+@Table(name = "WORKSHOP")
 public class Workshop implements Serializable, Comparable<Workshop> {
 
     private static final long serialVersionUID = 7966771392650078457L;	
@@ -27,20 +32,42 @@ public class Workshop implements Serializable, Comparable<Workshop> {
 
     private String organizationID;
 	private String title;
+	@Column(length=1000)
 	private String description;
     private String instructorName;
-    private Number numberOfPosting;
+    private int numberOfPosting;
     private Boolean certificate;
-    private Number duration;
+    private int duration;
+	private String type = "Workshop";
     private String mode;
     private String sector;
-	private LocalDateTime postedOn = LocalDateTime.now();
+	private LocalDateTime postedOn;
 
+	@JsonIgnore
+	private String skillsSerialized = null;
 
+	@Transient
+	private ArrayList<String> skills = new ArrayList<String>();
 
     @PrePersist
 	private void prePresist() {
-	    setId(UUID.randomUUID().toString());
+	    if (id == null || id.trim().length() == 0) {
+	    	setId(UUID.randomUUID().toString());
+			postedOn = LocalDateTime.now();
+		}
+
+		
+		if (skills != null && skills.size() > 0) {
+			
+			StringBuilder sb = new StringBuilder();
+			
+			for (String skill : skills) {
+				sb.append(skill);
+				sb.append("#");
+			}
+			
+			skillsSerialized = sb.toString();
+		}
 	}
 	
 	@Override

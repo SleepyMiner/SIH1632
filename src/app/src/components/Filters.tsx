@@ -43,14 +43,14 @@ export default function Filters() {
           filterKey="companySearch"
           groupName="Group 1"
         >
-          <Input onChange={handleCompanySearch} placeholder="Company Name" />
+          <Input onInput={handleCompanySearch} placeholder="Company Name" />
         </FilterGroupItem>
         <FilterGroupItem
           label="Job Search"
           filterKey="jobSearch"
           groupName="Group 2"
         >
-          <Input onChange={handleJobSearch} placeholder="Job Title" />
+          <Input onInput={handleJobSearch} placeholder="Job Title" />
         </FilterGroupItem>
         <FilterGroupItem
           label="Work Mode"

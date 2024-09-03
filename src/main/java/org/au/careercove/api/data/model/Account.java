@@ -17,7 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Data
 @EqualsAndHashCode()
 @ApiIgnore
-@Table(name = "Account")
+@Table(name = "ACCOUNT")
 public class Account implements Serializable, Comparable<Account> {
 
 	private static final long serialVersionUID = 7966771392650079456L;	

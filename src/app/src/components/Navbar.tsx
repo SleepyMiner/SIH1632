@@ -1,6 +1,6 @@
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import "@ui5/webcomponents-icons/dist/menu2.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SetActivePage {
   (actiPg: string): void;
@@ -23,6 +23,14 @@ export default function Navbar({ activePage, setActivePage }: NavbarProps) {
     { id: 3, text: "Internship", href: "#" },
     { id: 4, text: "Courses", href: "#" },
   ];
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const matchingItem = navItems.find(item => item.href === currentPath);
+    if (matchingItem) {
+      setActivePage(matchingItem.text);
+    }
+  }, [location, setActivePage])
 
   return (
     <div className="flex justify-between items-center h-24 max-w-[1280px] mx-auto px-4">

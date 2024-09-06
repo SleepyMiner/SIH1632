@@ -1,6 +1,7 @@
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import "@ui5/webcomponents-icons/dist/menu2.js";
 import { useEffect, useState } from "react";
+import Login from "./login";
 
 interface SetActivePage {
   (actiPg: string): void;
@@ -57,7 +58,7 @@ export default function Navbar({ activePage, setActivePage }: NavbarProps) {
         ))}
       </ul>
 
-      <button className="hidden md:flex hover:text-[#00df9a]">Login</button>
+      <Login/>
 
       {/* Mobile Navigation Icon */}
       <div onClick={handleNav} className="block md:hidden">
